@@ -122,7 +122,7 @@ namespace Gonk {
 	{
 		GK_PROFILE_FUNCTION();
 
-		uint32_t dataSize = (uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase;
+		uint32_t dataSize = static_cast<uint32_t>((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
 		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
 
 		Flush();
@@ -190,13 +190,13 @@ namespace Gonk {
 		{
 			if (*texture.get() == *s_Data.TextureSlots[i].get())
 			{
-				textureIndex = i;
+				textureIndex = (float)i;
 				break;
 			}
 		}
 		if (textureIndex == 0)
 		{
-			textureIndex = s_Data.TextureSlotIndex;
+			textureIndex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex++] = texture;
 		}
 		glm::mat4 transform = glm::scale(glm::translate(glm::mat4(1.0f), position),{ size, 1.0f });
@@ -225,13 +225,13 @@ namespace Gonk {
 		{
 			if (*texture.get() == *s_Data.TextureSlots[i].get())
 			{
-				textureIndex = i;
+				textureIndex = (float)i;
 				break;
 			}
 		}
 		if (textureIndex == 0)
 		{
-			textureIndex = s_Data.TextureSlotIndex;
+			textureIndex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex++] = texture;
 		}
 		glm::mat4 transform = glm::scale(glm::translate(glm::mat4(1.0f), position), { size, 1.0f });
@@ -277,13 +277,13 @@ namespace Gonk {
 		{
 			if (*texture.get() == *s_Data.TextureSlots[i].get())
 			{
-				textureIndex = i;
+				textureIndex = (float)i;
 				break;
 			}
 		}
 		if (textureIndex == 0)
 		{
-			textureIndex = s_Data.TextureSlotIndex;
+			textureIndex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex++] = texture;
 		}
 		glm::mat4 transform = glm::scale(glm::rotate(glm::translate(glm::mat4(1.0f), position), rotation, { 0.0f, 0.0f, 1.0f }), { size, 1.0f });
@@ -312,13 +312,13 @@ namespace Gonk {
 		{
 			if (*texture.get() == *s_Data.TextureSlots[i].get())
 			{
-				textureIndex = i;
+				textureIndex = (float)i;
 				break;
 			}
 		}
 		if (textureIndex == 0)
 		{
-			textureIndex = s_Data.TextureSlotIndex;
+			textureIndex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex++] = texture;
 		}
 		glm::mat4 transform = glm::scale(glm::rotate(glm::translate(glm::mat4(1.0f), position), rotation, { 0.0f, 0.0f, 1.0f }), { size, 1.0f });
@@ -363,13 +363,13 @@ namespace Gonk {
 		{
 			if (*texture.get() == *s_Data.TextureSlots[i].get())
 			{
-				textureIndex = i;
+				textureIndex = (float)i;
 				break;
 			}
 		}
 		if (textureIndex == 0)
 		{
-			textureIndex = s_Data.TextureSlotIndex;
+			textureIndex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex++] = texture;
 		}
 		for (int i = 0; i < 4; i++)

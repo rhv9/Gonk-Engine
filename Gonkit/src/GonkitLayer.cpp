@@ -212,13 +212,12 @@ namespace Gonk {
 		// Gonk Viewport
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-		ImGui::Begin("Gonk Viewport");
+		ImGui::Begin("Gonk Viewport"); 
 
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
 		
-
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		if (m_ViewportSize != *((glm::vec2*)&viewportSize) && viewportSize.x > 0 && viewportSize.y > 0)
 		{	
@@ -230,6 +229,7 @@ namespace Gonk {
 		}
 
 		ImGui::Image((void*)m_Framebuffer->GetColorAttachmentRendererID(), { m_ViewportSize.x, m_ViewportSize.y }, { 0, 1 }, { 1, 0 });
+
 		ImGui::End();
 		ImGui::PopStyleVar();
 

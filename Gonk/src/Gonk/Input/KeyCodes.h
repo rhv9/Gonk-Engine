@@ -4,7 +4,7 @@
 namespace Gonk {
 
 // from glfw3.h
-	typedef enum class Key : int16_t
+	enum class Key : int16_t
 	{
 		/* The unknown key */
 		UNKNOWN           = -1,

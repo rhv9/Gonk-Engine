@@ -117,13 +117,13 @@ public:
 		m_CameraController.OnUpdate(ts);
 		
 
-		if (Gonk::Input::IsKeyPressed(GK_KEY_I))
+		if (Gonk::Input::IsKeyPressed(Gonk::Key::I))
 			m_SquarePosition.y += 1.0f * ts;
-		if (Gonk::Input::IsKeyPressed(GK_KEY_K))
+		if (Gonk::Input::IsKeyPressed(Gonk::Key::K))
 			m_SquarePosition.y -= 1.0f * ts;
-		if (Gonk::Input::IsKeyPressed(GK_KEY_L))
+		if (Gonk::Input::IsKeyPressed(Gonk::Key::L))
 			m_SquarePosition.x += 1.0f * ts;
-		if (Gonk::Input::IsKeyPressed(GK_KEY_J))
+		if (Gonk::Input::IsKeyPressed(Gonk::Key::J))
 			m_SquarePosition.x -= 1.0f * ts;
 
 

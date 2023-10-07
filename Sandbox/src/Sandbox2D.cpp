@@ -146,7 +146,7 @@ void Sandbox2DLayer::OnUpdate(Gonk::Timestep ts)
 	Gonk::Renderer2D::EndScene();
 #endif
 
-	if (Gonk::Input::IsMouseButtonPressed(GK_MOUSE_BUTTON_LEFT))
+	if (Gonk::Input::IsMouseButtonPressed((int)Gonk::MouseButton::LEFT))
 	{
 		auto [x, y] = Gonk::Input::GetMousePosition();
 		auto width = Gonk::Application::Get().GetWindow().GetWidth();
@@ -172,7 +172,7 @@ void Sandbox2DLayer::OnEvent(Gonk::Event& e)
 
 	Gonk::EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<Gonk::KeyPressedEvent>([](Gonk::KeyPressedEvent& e) {
-		if (e.GetKeyCode() == GK_KEY_ESCAPE)
+		if (e.GetKeyCode() == Gonk::Key::ESCAPE)
 			Gonk::Application::Get().Shutdown();
 		return false;
 	});

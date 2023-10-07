@@ -7,7 +7,8 @@
 	/* Windows x64/x86 */
 	#ifdef _WIN64
 	/* Windows x64  */
-		#define GK_PLATFORM_WINDOWS
+		// This is removed because GK_PLATFORM_WINDOWS should be defined at compiler args level to prevent issues that may arise depending on order and if Core.h is included
+		//#define GK_PLATFORM_WINDOWS 
 #else
 	/* Windows x86 */
 	#error "x86 Builds are not supported!"
@@ -75,7 +76,8 @@
 #endif
 
 #define BIT(x) (1 << x)
-#define GK_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+//#define GK_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1) TODO: Why is this worse?
+#define GK_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
 namespace Gonk {
 
