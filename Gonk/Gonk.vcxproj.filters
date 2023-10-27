@@ -1442,6 +1442,7 @@
     </ClInclude>
     <ClInclude Include="src\Gonk\Scene\Component.h" />
     <ClInclude Include="src\Gonk\Scene\Entity.h" />
+    <ClInclude Include="src\Gonk\Renderer\SceneCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Gonk\Core\Application.cpp">
@@ -1538,5 +1539,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Gonk\Scene\Entity.cpp" />
+    <ClCompile Include="src\Gonk\Renderer\SceneCamera.cpp" />
   </ItemGroup>
 </Project>

@@ -28,10 +28,10 @@ namespace Gonk {
 		m_CameraController.SetZoomLevel(5.0f);
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
-		m_CameraEntity.AddComponent<CameraComponent>(glm::ortho(16.0f, -16.0f, 9.0f, -9.0f, 1.0f, -1.0f));
+		m_CameraEntity.AddComponent<CameraComponent>();
 
 		m_SecondCameraEntity = m_ActiveScene->CreateEntity("Clip Space camera entity");
-		m_SecondCameraEntity.AddComponent<CameraComponent>(glm::ortho(1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f));
+		m_SecondCameraEntity.AddComponent<CameraComponent>();
 
 		//Application::Get().GetWindow().SetVSync(false);
 	}
@@ -146,11 +146,21 @@ namespace Gonk {
 
 		ImGui::ColorEdit4("Col", &m_SquareEntity.GetComponent<SpriteRendererComponent>().Colour[0]);
 
+		ImGui::Checkbox("Primary Camera", &m_PrimaryCamera);
+		m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
+
 		ImGui::DragFloat("Secondary camera transform", (float*)&m_SecondCameraEntity.GetComponent<TransformComponent>().Transform[3]);
 
-		ImGui::Checkbox("Primary Camera", &m_PrimaryCamera);
+		if (!m_PrimaryCamera)
+		{
+			SceneCamera& camera = m_SecondCameraEntity.GetComponent<CameraComponent>().Camera;
+			float orthoSize = camera.GetOrthographicSize();
 
-		m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
+			if (ImGui::DragFloat("Secondary Camera Orthographic Size", &orthoSize))
+			{
+				camera.SetOrthographicSize(orthoSize);
+			}
+		}
 
 
 		ImGui::End();
@@ -172,6 +182,8 @@ namespace Gonk {
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 
 			m_CameraController.OnResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
 		ImGui::Image((void*)m_Framebuffer->GetColorAttachmentRendererID(), { m_ViewportSize.x, m_ViewportSize.y }, { 0, 1 }, { 1, 0 });

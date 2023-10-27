@@ -26,7 +26,7 @@ namespace Gonk {
 		Entity m_CameraEntity;
 		Entity m_SecondCameraEntity;
 
-		bool m_PrimaryCamera = false;
+		bool m_PrimaryCamera = true;
 
 		Ref<Framebuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize;

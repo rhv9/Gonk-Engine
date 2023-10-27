@@ -147,6 +147,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Gonk\Renderer\SceneCamera.h" />
     <ClInclude Include="src\Gonk\Scene\Entity.h" />
     <ClInclude Include="src\Gonk.h" />
     <ClInclude Include="src\Gonk\Core\Application.h" />
@@ -610,6 +611,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Gonk\Renderer\SceneCamera.cpp" />
     <ClCompile Include="src\Gonk\Scene\Entity.cpp" />
     <ClCompile Include="src\Gonk\Core\Application.cpp" />
     <ClCompile Include="src\Gonk\Core\Layer.cpp" />
