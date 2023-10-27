@@ -7,30 +7,6 @@
 
 #include <chrono>
 
-const char* s_MapTiles =
-"WWWWWWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWDDDDDDDDWWWWWWWWW"
-"WWWWWDDDDDDDDDDDDDWWWWWW"
-"WWWWWDDDDWDDDWDDDDDWWWWW"
-"WWWWWDDDDWDWDWDDDDDWWWWW"
-"WWWWWDDDDDWDWDDDDDDWWWWW"
-"WWWDDDDDDDDDDDDDDDDWWWWW"
-"WWWDDDDDDDDDDDDDDDDWWWWW"
-"WWWDDDDDDDDDDDDDDDDWWWWW"
-"WWWDDDDDDDDDDDDDDDDWWWWW"
-"WWWDDDDDDDDDDDDDDDDWWWWW"
-"WWWDDDDDDDDDDDDDDDDWWWWW"
-"WWWWDDDDDDDDDDDDDDDWWWWW"
-"WWWWDDDDDDDDDDDDDDWWWWWW"
-"WWWWWDDDDDDDDDDDDDWWWWWW"
-"WWWWWWWDDDDDDDDWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWWWWWW"
-;
-const uint32_t s_MapWidth = 24;
-const uint32_t s_MapHeight = strlen(s_MapTiles) / s_MapWidth;
-
-Gonk::Entity squareEntity;
 
 namespace Gonk {
 
@@ -39,31 +15,23 @@ namespace Gonk {
 		GK_PROFILE_FUNCTION();
 
 		m_ActiveScene = CreateRef<Scene>();
-		squareEntity = m_ActiveScene->CreateEntity("Square Entity");
-		squareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f });
+		m_SquareEntity = m_ActiveScene->CreateEntity("Square Entity");
+		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f });
 	 
 		// framebuffer
 		FramebufferSpec fbSpec;
-		fbSpec.Width = 1280.0f;
-		fbSpec.Height = 720.0f;
+		fbSpec.Width = 1280;
+		fbSpec.Height = 720;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
-
-		// textures
-		m_CheckerboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
-		m_LogoTexture = Texture2D::Create("assets/textures/ChernoLogo.png");
-		m_Spritesheet = Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
-
-		// subtextures
-		m_Barrel = SubTexture2D::CreateFromCoords(m_Spritesheet, { 9, 2 }, { 128, 128 });
-		m_Tree = SubTexture2D::CreateFromCoords(m_Spritesheet, { 0, 1 }, { 128, 128 }, { 1, 2 });
-		s_TextureMap['D'] = SubTexture2D::CreateFromCoords(m_Spritesheet, { 6, 11 }, { 128, 128 });
-		s_TextureMap['W'] = SubTexture2D::CreateFromCoords(m_Spritesheet, { 11, 11 }, { 128, 128 });
 
 		// camera
 		m_CameraController.SetZoomLevel(5.0f);
-		m_CameraController.SetPosition({ s_MapWidth / 2.0f, s_MapHeight / 2.0f });
 
-		Shader::Create("assets/shaders/FlatColour.glsl");
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity.AddComponent<CameraComponent>(glm::ortho(16.0f, -16.0f, 9.0f, -9.0f, 1.0f, -1.0f));
+
+		m_SecondCameraEntity = m_ActiveScene->CreateEntity("Clip Space camera entity");
+		m_SecondCameraEntity.AddComponent<CameraComponent>(glm::ortho(1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f));
 
 		//Application::Get().GetWindow().SetVSync(false);
 	}
@@ -71,7 +39,6 @@ namespace Gonk {
 	void GonkitLayer::OnDetach()
 	{
 		GK_PROFILE_FUNCTION();
-
 	}
 
 	float timestep = 0.0f;
@@ -87,40 +54,13 @@ namespace Gonk {
 			m_CameraController.OnUpdate(ts);
 
 
-
-
 		Renderer2D::ResetStats();
-		{
-			GK_PROFILE_SCOPE("Renderer Prep");
-			m_Framebuffer->Bind();
-			RendererCommand::SetColour(glm::vec4{0.2f});
-			RendererCommand::Clear();
-		}
-
-		Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-		for (int y = 0; y < s_MapHeight; y++)
-		{
-			for (int x = 0; x < s_MapWidth; x++)
-			{
-				char c = s_MapTiles[x + y * s_MapWidth];
-				Ref<SubTexture2D> texture;
-				if (s_TextureMap.find(c) != s_TextureMap.end())
-					texture = s_TextureMap[c];
-				else
-					texture = m_Barrel;
-				Renderer2D::DrawQuad({ x, y, 0.0f }, { 1.0f, 1.0f }, texture);
-			}
-		}
-
-		Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.9f }, { 1.0f, 1.0f }, m_Barrel);
-		Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.9f }, { 1.0f, 2.0f }, m_Tree);
-
+		m_Framebuffer->Bind();
+		RendererCommand::SetColour(glm::vec4{0.2f});
+		RendererCommand::Clear();
+		
 		// update scene
 		m_ActiveScene->OnUpdate(ts);
-
-
-		Renderer2D::EndScene();
 
 		m_Framebuffer->UnBind();
 	}
@@ -204,8 +144,14 @@ namespace Gonk {
 		ImGui::InputFloat3("Camera Info", (float*)&m_CameraController);
 		ImGui::NewLine();
 
-		
-		ImGui::ColorEdit4("Col", &squareEntity.GetComponent<SpriteRendererComponent>().Colour[0]);
+		ImGui::ColorEdit4("Col", &m_SquareEntity.GetComponent<SpriteRendererComponent>().Colour[0]);
+
+		ImGui::DragFloat("Secondary camera transform", (float*)&m_SecondCameraEntity.GetComponent<TransformComponent>().Transform[3]);
+
+		ImGui::Checkbox("Primary Camera", &m_PrimaryCamera);
+
+		m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
+
 
 		ImGui::End();
 		

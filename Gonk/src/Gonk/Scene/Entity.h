@@ -39,7 +39,7 @@ namespace Gonk {
 		{
 			GK_CORE_ASSERT(HasComponent<T>(), "Entity does not have component!");
 
-			m_Scene->m_Registry.remove<T>(m_EntityHandle);
+			m_Scene->m_Registry.erase<T>(m_EntityHandle);
 		}
 
 		operator bool() const { return m_EntityHandle != entt::null; }

@@ -21,16 +21,16 @@ namespace Gonk {
 
 		OrthographicCameraController m_CameraController{1280.0f / 720.0f};
 
-		Ref<Texture2D> m_Spritesheet;
-		Ref<SubTexture2D> m_Barrel, m_Tree;
-		Ref<Framebuffer> m_Framebuffer;
-
 		Ref<Scene> m_ActiveScene;
+		Entity m_SquareEntity;
+		Entity m_CameraEntity;
+		Entity m_SecondCameraEntity;
 
+		bool m_PrimaryCamera = false;
+
+		Ref<Framebuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize;
 		bool m_ViewportFocused = true, m_ViewportHovered = true;
-
-		std::unordered_map<char, Ref<SubTexture2D>> s_TextureMap;
 	};
 
 }

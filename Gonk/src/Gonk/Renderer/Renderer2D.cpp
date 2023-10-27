@@ -44,7 +44,10 @@ namespace Gonk {
 		std::array<Ref<Texture>, MaxTextureSlots> TextureSlots;
 		uint32_t TextureSlotIndex = 1; // 0 = WhiteTexture
 
+		bool SceneStarted = false;
+
 		Renderer2D::Statistics Stats;
+
 	};
 
 	static Renderer2DData s_Data;
@@ -108,7 +111,27 @@ namespace Gonk {
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 	}
 
-	void Renderer2D::BeginScene(OrthographicCamera& camera)
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
+	{
+		GK_PROFILE_FUNCTION();
+
+		if (s_Data.SceneStarted)
+		{
+			GK_CORE_CRITICAL("Beginning a Renderer2D Scene without ending prior scene!");
+		}
+
+		s_Data.SceneStarted = true;
+
+		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+		s_Data.TextureShader->Bind();
+		s_Data.TextureShader->SetMat4("u_ViewProjectionMatrix", viewProj);
+
+		InitNewBatch();
+
+	}
+
+	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
 		GK_PROFILE_FUNCTION();
 
@@ -121,6 +144,8 @@ namespace Gonk {
 	void Renderer2D::EndScene()
 	{
 		GK_PROFILE_FUNCTION();
+
+		s_Data.SceneStarted = false;
 
 		uint32_t dataSize = static_cast<uint32_t>((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
 		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);

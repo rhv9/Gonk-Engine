@@ -2,6 +2,20 @@
 
 namespace Gonk {
 
+	class Camera
+	{
+	public:
+		Camera(const glm::mat4& projection)
+			: m_Projection(projection) {}
+
+		const glm::mat4& GetProjection() const { return m_Projection; }
+
+		// TODO: Add specific type of camera setters to make API glm agnostic
+
+	private:
+		glm::mat4 m_Projection;
+	};
+
 	class OrthographicCamera
 	{
 
@@ -9,7 +23,7 @@ namespace Gonk {
 		OrthographicCamera(float left, float right, float bottom, float top);
 
 		void SetProjectionMatrix(float left, float right, float bottom, float top);
-		glm::mat4& GetViewProjection() { return m_ViewProjectionMatrix; }
+		const glm::mat4& GetViewProjection() const { return m_ViewProjectionMatrix; }
 		void SetPosition(const glm::vec3& pos) { m_Position = pos; RecalculateProjectionMatrix(); }
 		void SetRotation(const float rotation) { m_Rotation = rotation; RecalculateProjectionMatrix(); }
 		const glm::vec3& GetPosition() const { return m_Position; }

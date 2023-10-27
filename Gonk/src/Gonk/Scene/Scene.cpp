@@ -31,13 +31,45 @@ namespace Gonk {
 
     void Scene::OnUpdate(Timestep ts)
     {
-        auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-        for (auto entity : group)
+
+        // Render 2D
+        Camera* mainCamera = nullptr;
+        glm::mat4* cameraTransform = nullptr;
+        
+        auto group2 = m_Registry.view<TransformComponent, CameraComponent>();
+        for (auto entity : group2)
         {
-            auto&& [transform, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+            // TODO: Why do I have to put && instead of &
+            auto&&[transform, camera] = group2.get<TransformComponent, CameraComponent>(entity);
             
-            Renderer2D::DrawQuad(transform, spriteRenderer.Colour);
+            if (camera.Primary)
+            {
+                mainCamera = &camera.Camera;
+                cameraTransform = &transform.Transform;
+                break;
+            }
         }
+        
+
+        if (mainCamera)
+        {
+            Renderer2D::BeginScene(*mainCamera, *cameraTransform);
+
+            auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+            for (auto entity : group)
+            {
+                auto&& [transform, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+                
+                Renderer2D::DrawQuad(transform, spriteRenderer.Colour);
+            }
+
+            Renderer2D::EndScene();
+        }
+        else
+        {
+            GK_CORE_WARN("No main camera set!");
+        }
+
     }
 
 }

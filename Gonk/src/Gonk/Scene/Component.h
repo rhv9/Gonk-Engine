@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Gonk/Renderer/Camera.h"
+
 namespace Gonk {
 
 	struct TagComponent
@@ -36,6 +38,19 @@ namespace Gonk {
 			: Colour(colour) {}
 
 	};
+
+	struct CameraComponent
+	{
+		Camera Camera;
+		bool Primary = true; // TODO: Probably move this to scene?
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const glm::mat4& projection)
+			: Camera(projection) {}
+
+	};
+
 
 
 
