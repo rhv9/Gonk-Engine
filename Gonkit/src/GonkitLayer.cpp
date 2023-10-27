@@ -49,6 +49,20 @@ namespace Gonk {
 		GK_PROFILE_FUNCTION();
 
 		timestep = (float)ts.GetMilliSeconds();
+
+		if (FramebufferSpec spec = m_Framebuffer->GetSpec();
+			m_ViewportSize.x > 0 && m_ViewportSize.y > 0 &&
+			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+		{
+			// Checking due to weird bug when double clicking imgui window causes height to be -16. Like why?
+			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
+			m_CameraController.OnResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		}
+
+
 		// update
 		if (m_ViewportFocused)
 			m_CameraController.OnUpdate(ts);
@@ -175,16 +189,7 @@ namespace Gonk {
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
 		
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-		if (m_ViewportSize != *((glm::vec2*)&viewportSize) && viewportSize.x > 0 && viewportSize.y > 0)
-		{	
-			// Checking due to weird bug when double clicking imgui window causes height to be -16. Like why?
-			m_ViewportSize = { viewportSize.x, viewportSize.y };
-			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-
-			m_CameraController.OnResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		}
+		m_ViewportSize = { viewportSize.x, viewportSize.y };
 
 		ImGui::Image((void*)m_Framebuffer->GetColorAttachmentRendererID(), { m_ViewportSize.x, m_ViewportSize.y }, { 0, 1 }, { 1, 0 });
 
