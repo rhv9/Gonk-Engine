@@ -33,6 +33,36 @@ namespace Gonk {
 		m_SecondCameraEntity = m_ActiveScene->CreateEntity("Clip Space camera entity");
 		m_SecondCameraEntity.AddComponent<CameraComponent>();
 
+		class TestScript : public ScriptableEntity
+		{
+		public:
+			void OnCreate()
+			{
+				GK_TRACE("OnCreate Successful for TestScript!");
+			}
+
+			void OnDestroy()
+			{
+
+			}
+
+			void OnUpdate(Timestep ts)
+			{
+				auto& transform = GetComponent<TransformComponent>().Transform;
+
+				if (Input::IsKeyPressed(Key::W))
+					transform = glm::translate(transform, glm::vec3(0.0f, 1.0f, 0.0f));
+				if (Input::IsKeyPressed(Key::S))
+					transform = glm::translate(transform, glm::vec3(0.0f, -1.0f, 0.0f));
+				if (Input::IsKeyPressed(Key::A))
+					transform = glm::translate(transform, glm::vec3(-1.0f, 0.0f, 0.0f));
+				if (Input::IsKeyPressed(Key::D))
+					transform = glm::translate(transform, glm::vec3(1.0f, 0.0f, 0.0f));
+			}
+		};
+
+		m_SecondCameraEntity.AddComponent<NativeScriptComponent>().Bind<TestScript>();
+
 		//Application::Get().GetWindow().SetVSync(false);
 	}
 

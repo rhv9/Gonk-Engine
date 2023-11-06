@@ -16,6 +16,7 @@
 
 #include "Gonk/Scene/Scene.h"
 #include "Gonk/Scene/Entity.h"
+#include "Gonk/Scene/ScriptableEntity.h"
 #include "Gonk/Scene/Component.h"
 
 // Rendering

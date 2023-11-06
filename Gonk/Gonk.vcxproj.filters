@@ -1443,6 +1443,7 @@
     <ClInclude Include="src\Gonk\Scene\Component.h" />
     <ClInclude Include="src\Gonk\Scene\Entity.h" />
     <ClInclude Include="src\Gonk\Renderer\SceneCamera.h" />
+    <ClInclude Include="src\Gonk\Scene\ScriptableEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Gonk\Core\Application.cpp">

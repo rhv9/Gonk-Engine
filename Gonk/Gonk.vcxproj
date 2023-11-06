@@ -183,6 +183,7 @@
     <ClInclude Include="src\Gonk\Renderer\VertexArray.h" />
     <ClInclude Include="src\Gonk\Scene\Component.h" />
     <ClInclude Include="src\Gonk\Scene\Scene.h" />
+    <ClInclude Include="src\Gonk\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
